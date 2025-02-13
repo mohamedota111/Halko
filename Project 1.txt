@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة المحارب</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div id="joystick-container">
+        <div id="joystick"></div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
+
+/* style.css */
+body { margin: 0; overflow: hidden; background-color: black; }
+canvas { display: block; }
+#joystick-container {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    touch-action: none;
+}
+#joystick {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: white;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    touch-action: none;
+}
+
+/* game.js */
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+class Player {
+    constructor() {
+        this.x = canvas.width / 2;
+        this.y = canvas.height / 2;
+        this.width = 50;
+        this.height = 50;
+        this.speed = 5;
+        this.dx = 0;
+        this.dy = 0;
+    }
+    draw() {
+        ctx.fillStyle = "blue";
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+    move() {
+        this.x += this.dx;
+        this.y += this.dy;
+        this.x = Math.max(0, Math.min(canvas.width - this.width, this.x));
+        this.y = Math.max(0, Math.min(canvas.height - this.height, this.y));
+    }
+}
+
+let player = new Player();
+
+function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    player.move();
+    player.draw();
+    requestAnimationFrame(gameLoop);
+}
+gameLoop();
